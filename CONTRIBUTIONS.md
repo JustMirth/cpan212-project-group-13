@@ -10,3 +10,7 @@
 ### Judd Torres
 - #3 External API
 - #5 Endpoint list
+
+
+## M2
+- Setup Node.js (#1)
