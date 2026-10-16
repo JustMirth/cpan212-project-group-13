@@ -1,4 +1,6 @@
 import express from "express";
+import workoutRoutes from "./routes/workoutRoutes.js";
+import exerciseRoutes from "./routes/exerciseRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -7,7 +9,15 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
     res.status(200).json({
-        message: "Welcome to the Workout API",
+        message: "Welcome to the Workout API", 
+    });
+});
+
+app.use("/api/workouts", workoutRoutes);
+app.use("/api/exercises", exerciseRoutes);
+app.use((req, res) => {
+    res.status(404).json({
+        error: { message: "Route not found" },
     });
 });
 
