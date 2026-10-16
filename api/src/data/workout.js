@@ -28,4 +28,4 @@ export const workouts = [
         exercises: [],
         notes: "Need to build up stamina, will start slow",
     }
-];
+]
