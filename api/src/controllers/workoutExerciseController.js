@@ -56,18 +56,43 @@ export function addWorkoutExercise(req, res) {
         });
     }
 
+    const { exerciseID, sets } = req.body;
+    const masterExercise = exerciseLibrary.find(
+        (exercise) => exercise.wgerID === exerciseID
+    );
+
+    if (!masterExercise) {
+        return res.status(404).json({
+            error: { message: "Exercise not found in master library" },
+        });
+    }
+
     if (!Array.isArray(workout.exercises)) {
         workout.exercises = [];
     }
 
-    const exercise = {
-        ...req.body,
-        id: randomUUID(),
+    const alreadyAdded = workout.exercises.some(
+        (exercise) => exercise.exerciseID === exerciseID
+    );
+
+    if (alreadyAdded) {
+        return res.status(400).json({
+            error: {
+                message: "Exercise is already in workout",
+            },
+        });
+    }
+
+    const workoutExercise = {
+        exerciseID: masterExercise.wgerID,
+        exerciseName: masterExercise.name,
+        sets,
     };
 
-    workout.exercises.push(exercise);
+    workout.exercises.push(workoutExercise);
+    workout.updatedAt = new Date()
 
-    res.status(201).json(exercise);
+    res.status(201).json(workoutExercise);
 }
 
 export function updateWorkoutExercise(req, res) {
