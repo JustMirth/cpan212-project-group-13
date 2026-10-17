@@ -20,3 +20,4 @@
 - Setup Routers (#3)
 - Setup Validators (#4)
 - Made 2 universal error handlers for 500 errors and 404 errors not covered in the controllers (#5)
+- Status Codes (#6)
