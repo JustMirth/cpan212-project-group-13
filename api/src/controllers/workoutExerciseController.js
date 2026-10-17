@@ -5,6 +5,16 @@ function findWorkout(workoutID) {
     return workouts.find((workout) => workout.id === workoutID);
 }
 
+function findExercise(workoutID, exerciseID) {
+    const workout = findWorkout(workoutID);
+
+    if (!workout || !Array.isArray(workout.exercises)) {
+        return undefined;
+    }
+    
+    return workout.exercises.find((exercise) => exercise.id === exerciseID);
+}
+
 export function getWorkoutExercises(req, res) {
     const workout = findWorkout(req.params.workoutID);
 
@@ -26,10 +36,12 @@ export function getWorkoutExerciseByID(req, res) {
         });
     }
 
+    const exercise = findExercise(req.params.workoutID, req.params.exerciseID)
+
     if (!exercise) {
         return res.status(404).json({
-            error: { message: "Excercise not found in workout" },
-        })
+            error: { message: "Exercise not found in workout" },
+        });
     }
 
     res.status(200).json(exercise);
