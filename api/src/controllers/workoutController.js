@@ -42,7 +42,7 @@ export function createWorkout(req, res) {
         updatedAt: now,
     };
 
-    workout.push(workout);
+    workouts.push(workout);
 
     res.status(201).json(workout);
 }
@@ -51,7 +51,7 @@ export function updateWorkout(req, res) {
     const index = workouts.findIndex((item) => item.id === req.params.id);
 
     if (index === -1) {
-        return res.status(404).json9({
+        return res.status(404).json({
             error: { 
                 message: "Workout not found",
                 details: null
@@ -74,7 +74,7 @@ export function updateWorkout(req, res) {
         ...workouts[index],
         ...req.body,
         id: workouts[index].id,
-        userid: workouts[index].userID,
+        userID: workouts[index].userID,
         createdAt: workouts[index].createdAt,
         updatedAt: new Date(),
     }

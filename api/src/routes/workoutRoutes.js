@@ -23,9 +23,9 @@ router.put("/:id", updateWorkout);
 router.delete("/:id", deleteWorkout);
 
 router.get("/:workoutID/exercises", getWorkoutExercises);
-router.get("/:workoutID/exercises/:exerciseID", getWorkoutExerciseByID);
+router.get("/:workoutID/exercises/:workoutExerciseID", getWorkoutExerciseByID);
 router.post("/:workoutID/exercises", addWorkoutExercise);
-router.put("/:workoutID/exercises/:exerciseID", updateWorkoutExercise);
-router.delete("/:workoutID/exercises/:exerciseID", deleteWorkoutExercise);
+router.put("/:workoutID/exercises/:workoutExerciseID", updateWorkoutExercise);
+router.delete("/:workoutID/exercises/:workoutExerciseID", deleteWorkoutExercise);
 
 export default router;

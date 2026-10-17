@@ -64,17 +64,17 @@ export function validateWorkoutExercise(body) {
 
     const errors = [];
 
-    if (!Number.isInteger(body.exerciseID) || body.exerciseID <= 0) {
+    if (!Number.isInteger(body.wgerID) || body.wgerID <= 0) {
         errors.push({
-            field: "exerciseID",
-            message: "Exercise ID must be a positive integer",
+            field: "wgerID",
+            message: "Wger ID must be a positive integer",
         });
     }
 
     errors.push(...validateSets(body.sets));
 
     for (const field of Object.keys(body)) {
-        if (!["exerciseID", "sets"].includes(field)) {
+        if (!["wgerID", "sets"].includes(field)) {
             errors.push({
                 field,
                 message: "Unknown field",
