@@ -11,7 +11,10 @@ export function getWorkoutByID (req, res) {
 
     if (!workout) {
         return res.status(404).json({
-            error: { message: "Workout not found "},
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -49,7 +52,10 @@ export function updateWorkout(req, res) {
 
     if (index === -1) {
         return res.status(404).json9({
-            error: { message: "Workout not found "},
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -81,7 +87,10 @@ export function deleteWorkout(req, res) {
 
     if (index === -1) {
         return res.status(404).json({
-            error: { message: "Workout not found" },
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 

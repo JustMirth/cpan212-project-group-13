@@ -21,7 +21,10 @@ export function getWorkoutExercises(req, res) {
 
     if (!workout) {
         return res.status(404).json({
-            error: { message: "Workout not found" },
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -33,7 +36,10 @@ export function getWorkoutExerciseByID(req, res) {
 
     if (!workout) {
         return res.status(404).json({
-            error: { message: "Workout not found" },
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -41,7 +47,10 @@ export function getWorkoutExerciseByID(req, res) {
 
     if (!exercise) {
         return res.status(404).json({
-            error: { message: "Exercise not found in workout" },
+            error: { 
+                message: "Exercise not found in workout",
+                details: null
+            },
         });
     }
 
@@ -53,7 +62,10 @@ export function addWorkoutExercise(req, res) {
 
     if (!workout) {
         return res.status(404).json({
-            error: { message: "Workout not found" },
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -75,7 +87,10 @@ export function addWorkoutExercise(req, res) {
 
     if (!masterExercise) {
         return res.status(404).json({
-            error: { message: "Exercise not found in master library" },
+            error: { 
+                message: "Exercise not found in master library",
+                details: null
+            },
         });
     }
 
@@ -112,7 +127,10 @@ export function updateWorkoutExercise(req, res) {
 
     if (!workout) {
         return res.status(404).json({
-            error: { message: "Workout not found" },
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -134,7 +152,10 @@ export function updateWorkoutExercise(req, res) {
 
     if (index === -1) {
         return res.status(404).json({
-            error: { message: "Exercise not found in workout" },
+            error: { 
+                message: "Exercise not found in workout",
+                details: null
+            },
         });
     }
 
@@ -152,7 +173,10 @@ export function deleteWorkoutExercise(req, res) {
 
     if (!workout) {
         return res.status(404).json({
-            error: { message: "Workout not found" },
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
         });
     }
 
@@ -163,7 +187,10 @@ export function deleteWorkoutExercise(req, res) {
 
     if (index === -1) {
         return res.status(404).json({
-            error: { message: "Exercise not found in workout" },
+            error: { 
+                message: "Exercise not found in workout",
+                details: null
+            },
         });
     }
 

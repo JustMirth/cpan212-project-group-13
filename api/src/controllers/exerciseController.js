@@ -10,7 +10,10 @@ export function getExerciseByID(req, res) {
     
     if (!exercise) {
         return res.status(404).json({
-            error: { message: "Exercise not found" },
+            error: { 
+                message: "Exercise not found",
+                details: null
+            },
         });
     }
 
@@ -33,7 +36,10 @@ export function updateExercise(req, res) {
 
     if (index === -1) {
         return res.status(404).json({
-            error: { message: "Exercise not found" },
+            error: { 
+                message: "Exercise not found", 
+                details: null
+            },
         });
     }
 
@@ -51,7 +57,10 @@ export function deleteExercise(req, res) {
 
     if (index === -1) {
         return res.status(404).json({
-            error: { message: "Exercise not found" },
+            error: { 
+                message: "Exercise not found",
+                details: null
+            },
         });
     }
 

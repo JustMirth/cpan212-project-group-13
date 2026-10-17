@@ -1,6 +1,7 @@
 import express from "express";
 import workoutRoutes from "./routes/workoutRoutes.js";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
+import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -15,11 +16,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/workouts", workoutRoutes);
 app.use("/api/exercises", exerciseRoutes);
-app.use((req, res) => {
-    res.status(404).json({
-        error: { message: "Route not found" },
-    });
-});
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
