@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { workouts } from "../data/workouts.js";
+import { validateWorkout, validateWorkoutUpdate } from "../validators/workoutValidators.js";
 
 export function getWorkouts (req, res) {
     res.status(200).json(workouts);
@@ -18,6 +19,17 @@ export function getWorkoutByID (req, res) {
 }
 
 export function createWorkout(req, res) {
+    const errors = validateWorkout(req.body);
+
+    if (errors.length > 0) {
+        return res.status(400).json({
+            error: {
+                message: "Invalid workout",
+                details: errors,
+            },
+        });
+    }
+    
     const now = new Date();
 
     const workout = {
@@ -38,6 +50,17 @@ export function updateWorkout(req, res) {
     if (index === -1) {
         return res.status(404).json9({
             error: { message: "Workout not found "},
+        });
+    }
+
+    const errors = validateWorkoutUpdate(req.body);
+
+    if (errors.length > 0) {
+        return res.status(400).json({
+            error: {
+                message: "Invalid workout",
+                details: errors,
+            },
         });
     }
 

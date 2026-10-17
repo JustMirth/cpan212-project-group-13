@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { workouts } from "../data/workouts.js";
+import { validateWorkoutExercise, validateWorkoutExerciseUpdate } from "../validators/workoutExercisesValidators.js";
 
 function findWorkout(workoutID) {
     return workouts.find((workout) => workout.id === workoutID);
@@ -56,6 +57,17 @@ export function addWorkoutExercise(req, res) {
         });
     }
 
+    const errors = validateWorkoutExercise(req.body);
+
+    if (errors.length > 0) {
+        return res.status(400).json({
+            error: {
+                message: "Invalid workout exercise",
+                details: errors,
+            },
+        });
+    }
+
     const { exerciseID, sets } = req.body;
     const masterExercise = exerciseLibrary.find(
         (exercise) => exercise.wgerID === exerciseID
@@ -101,6 +113,17 @@ export function updateWorkoutExercise(req, res) {
     if (!workout) {
         return res.status(404).json({
             error: { message: "Workout not found" },
+        });
+    }
+
+    const errors = validateWorkoutExerciseUpdate(req.body);
+
+    if (errors.length > 0) {
+        return res.status(400).json({
+            error: {
+                message: "Invalid workout exercise",
+                details: errors,
+            },
         });
     }
 
