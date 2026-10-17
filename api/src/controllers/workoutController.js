@@ -18,9 +18,13 @@ export function getWorkoutByID (req, res) {
 }
 
 export function createWorkout(req, res) {
+    const now = new Date();
+
     const workout = {
         ...req.body,
         id: randomUUID(),
+        createdAt: now,
+        updatedAt: now,
     };
 
     workout.push(workout);
@@ -41,6 +45,9 @@ export function updateWorkout(req, res) {
         ...workouts[index],
         ...req.body,
         id: workouts[index].id,
+        userid: workouts[index].userID,
+        createdAt: workouts[index].createdAt,
+        updatedAt: new Date(),
     }
 
     res.status(200).json(workouts[index]);
