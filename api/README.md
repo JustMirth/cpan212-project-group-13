@@ -1,5 +1,32 @@
-This is just filler for now
+## How to run API, environment variables, table of endpoints
+API requires no key; just the default installations:
+npm install
+npm run dev
 
+so far for environment variables:
+Method          Path                    What
+PORT            4000                    Default port used
+
+API Endpoints
+Workouts
+Method              Path                        What                    
+GET                 /api/workouts               Get workouts
+GET                 /api/workouts/:id           Get workout via ID
+POST                /api/workouts               Create workout
+PUT                 /api/workouts/:id           update workout
+DELETE              /api/workouts/:id           delete workout
+
+Exercises
+Method              Path                        What                    
+GET                 /api/exercises              Get exercises
+GET                 /api/exercises/:id           Get workout via ID
+POST                /api/exercises               Create exercises
+PUT                 /api/exercises/:id           update exercises
+DELETE              /api/exercises/:id           delete exercise
+
+External WGER API
+Method              Path                        What                    
+GET                 /api/wger/exercises         Get exercises from API
 ## TESTING SECTION
 
 ## Workout:
@@ -122,6 +149,7 @@ changing abortSignal.timeout() to lesser than API response time
 would return a 504
 
 $ curl -i http://localhost:4000/api/wger/exercises/what
+
 would return a 404 Not Found
 
 
