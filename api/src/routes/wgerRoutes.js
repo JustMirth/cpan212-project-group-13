@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { searchWgerExercises } from "../lib/wger";
+import { getWgerExercises } from "../lib/wger.js";
+import { searchWgerExercises } from "../controllers/wgerController.js";
 
 
 const router = Router();

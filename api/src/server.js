@@ -1,6 +1,7 @@
 import express from "express";
 import workoutRoutes from "./routes/workoutRoutes.js";
 import exerciseRoutes from "./routes/exerciseRoutes.js";
+import wgerRoutes from "./routes/wgerRoutes.js";        //wger import
 import { notFoundHandler, errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/workouts", workoutRoutes);
 app.use("/api/exercises", exerciseRoutes);
+app.use("/api/wger", wgerRoutes)    //external API route
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -13,7 +13,7 @@ const URL = "https://wger.de/api/v2/exerciseinfo/" //or https://wger.de/api/v2 (
 const cache = new Map()
 const CACHE_TTL_SECONDS = 600
 
-export async function searchWgerExercises() {
+export async function getWgerExercises() {
 
     const saved = cache.get("exercises")
 
@@ -26,8 +26,9 @@ export async function searchWgerExercises() {
         cache.delete("exercises");
     }
 
-    
+
     try {
+     
         const response = await fetch(URL, {
             signal: AbortSignal.timeout(5000)
         })
@@ -54,7 +55,7 @@ export async function searchWgerExercises() {
                 name: translate?.name ?? "Unknown exercise",
                 description: translate?.description ?? "n/a",
                 category: exercise.category?.name ?? null,
-                muscles: (exercise.muscles ?? {}).map(
+                muscles: (exercise.muscles ?? []).map(
                     (muscle) => muscle.name_en ?? muscle.name
                 )
             }
@@ -75,6 +76,7 @@ export async function searchWgerExercises() {
         /*
         returns a 502 (external API error) or 504 (timeout) in your error shape instead of crashing
         */
+    
         if (error.name === "TimeoutError") {
             const timeoutError = new Error("WGER API has timed out")
             timeoutError.status = 504;
