@@ -2,7 +2,7 @@
 
 This is going to be WorkOut App (we are still flushing out name).
 
-Active group members include Mitchell Callaghan (JustMirth) and Judd Lawrence (julato).
+Active group members include Mitchell Callaghan (JustMirth), Judd Lawrence (julato), Mohamed Salad (mohamedS-N10015122).
 
 # AI use
 
