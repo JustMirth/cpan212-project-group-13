@@ -26,3 +26,11 @@
 - Setup wger.js to fetch from external API (#7)
 - Wrote curl tests (with help of Mitchell) (#8)
 - Wrote how to run API, environment variables, and table of endpoints section in README.md (#9)
+
+
+## M3
+
+### Mitchell Callaghan
+- Setup Next.js (#1)
+- Made pages, pulling data from API (#2 and #3)
+- Made next.config rewrite path to not include local host (#4)
