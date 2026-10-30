@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
 
 export default async function WorkoutDetailPage({ params }){
     const { id } = await params;
@@ -56,11 +57,9 @@ export default async function WorkoutDetailPage({ params }){
 
             <h2>Notes</h2>
             <p>{workout.notes || "No notes available"}</p>
-
             <Link href={`/workouts/${workout.id}/edit`}>Edit Workout</Link>
-
+            <DeleteWorkoutButton workoutID={workout.id} />
             <br />
-
             <Link href="/workouts">Back to Workouts</Link>
         </main>
     );
