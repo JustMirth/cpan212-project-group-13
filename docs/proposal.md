@@ -188,12 +188,12 @@ Endpoint list
     [method, path, what it does, successs status code, error status] 
     [list, get, create, update, delete, + external API]
         METHOD      PATH                    WHAT IT DOES                    SUCCESS STATUS CODE     ERROR STATUS
-        GET         /api/workoouts          Returns workouts to user        200                     404, 500    
+        GET         /api/workouts          Returns workouts to user        200                     404, 500    
         GET         /api/workouts/:id       Returns workout based on ID     200                     404, 500
         GET         /api/exercises          Returns exercises to user       200                     404, 500
         GET         /api/exercises/:id      Returns exercises based on ID   200                     404, 500
 
-        POST        /api/workoouts          Creates workout regiment        201                     409, 500
+        POST        /api/workouts          Creates workout regiment        201                     409, 500
         POST        /api/exercises          Creates and adds exercise       201                     409, 500
                                             to regiment
         
