@@ -34,3 +34,4 @@
 - Setup Next.js (#1)
 - Made pages, pulling data from API (#2 and #3)
 - Made next.config rewrite path to not include local host (#4)
+- Made shared state banner notification for deleted workouts (#7)

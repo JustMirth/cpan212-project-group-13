@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
+import NotificationMessage from "@/components/NotificationMessage";
 
 export default async function WorkoutDetailPage({ params }){
     const { id } = await params;
@@ -40,6 +41,7 @@ export default async function WorkoutDetailPage({ params }){
 
     return (
         <main>
+            <NotificationMessage />
             <h1>{workout.name}</h1>
             <p>{workout.description}</p>
             <p>Date: {workout.date}</p>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
+import NotificationMessage from "@/components/NotificationMessage";
 
 export default async function WorkoutPages() {
     let workouts;
@@ -26,6 +27,7 @@ export default async function WorkoutPages() {
 
     return (
         <main>
+            <NotificationMessage />
             <h1>My Workouts</h1>
 
             <Link href="/workouts/new">Create new Workout</Link>

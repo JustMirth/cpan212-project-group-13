@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import { NotificationProvider } from "@/components/NotificationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,8 +22,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <header>
-          <h1>WorkoutApp</h1>
+        <NotificationProvider>
+          <header>
+            <h1>WorkoutApp</h1>
 
           <nav>
             <Link href="/workouts">Workouts</Link>
@@ -30,7 +32,8 @@ export default function RootLayout({ children }) {
           </nav>
         </header>
 
-        <main>{children}</main>
+          <main>{children}</main>
+        </NotificationProvider>
       </body>
     </html>
   );
