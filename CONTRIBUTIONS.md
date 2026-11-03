@@ -37,4 +37,4 @@
 - Made shared state banner notification for deleted workouts (#7)
 
 ### Mohamed Salad
-- Made Loading, empty and error states.
+- Made Loading, empty and error states. (#6)
