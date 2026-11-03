@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useNotification } from "./NotificationContext";
 
-export default function DeleteWorkoutButton({ workoutID }) {
+export default function DeleteWorkoutButton({ workoutID, workoutName }) {
     const router = useRouter();
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState("");
@@ -27,7 +27,7 @@ export default function DeleteWorkoutButton({ workoutID }) {
                 throw new Error("Unable to delete workout.")
             }
 
-            setNotification("Workout deleted successfully.");
+            setNotification(`Workout ${workoutName} deleted successfully.`);
             router.push("/workouts");
             router.refresh();
         } catch (error) {

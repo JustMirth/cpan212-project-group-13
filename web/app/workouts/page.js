@@ -42,7 +42,7 @@ export default async function WorkoutPages() {
                             <p>Date: {workout.date}</p>
                             <p>Status: {workout.status}</p>
                             <Link href={`/workouts/${workout.id}`}>View Workout</Link>
-                            <DeleteWorkoutButton workoutID={workout.id} />
+                            <DeleteWorkoutButton workoutID={workout.id} workoutName={workout.name} />
                         </article>
                     ))}
                     </Suspense>
