@@ -24,7 +24,7 @@ export default function DeleteWorkoutButton({ workoutID }) {
             });
 
             if (!response.ok) {
-                throw new error("Unable to delete workout.")
+                throw new Error("Unable to delete workout.")
             }
 
             setNotification("Workout deleted successfully.");

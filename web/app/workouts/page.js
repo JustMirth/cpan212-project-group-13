@@ -1,6 +1,8 @@
 import Link from "next/link";
 import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
 import NotificationMessage from "@/components/NotificationMessage";
+import { Suspense } from "react";
+import Loading from "./(list)/loading";
 
 export default async function WorkoutPages() {
     let workouts;
@@ -17,12 +19,7 @@ export default async function WorkoutPages() {
 
         workouts = await response.json();
     } catch (error) {
-        return (
-            <main>
-                <h1>Workouts</h1>
-                <p>Unavble to load workouts. Please try again later.</p>
-            </main>
-        );
+        throw new Error("Unable to load workouts. Please try again later.");
     }
 
     return (
@@ -36,6 +33,8 @@ export default async function WorkoutPages() {
                 <p>No workouts found. Create your first workout!</p>
             ) : (
                 <section>
+                    <Suspense fallback={<Loading/>}>
+
                     {workouts.map((workout) => (
                         <article key={workout.id}>
                             <h2>{workout.name}</h2>
@@ -46,6 +45,7 @@ export default async function WorkoutPages() {
                             <DeleteWorkoutButton workoutID={workout.id} />
                         </article>
                     ))}
+                    </Suspense>
                 </section>
             )}
         </main>
