@@ -14,7 +14,7 @@ export default function EventsError({ error, retry }) {
   return (
     <section role="alert">
       <h1>Something went wrong</h1>
-      <p>The events could not be loaded. Try again in a moment.</p>
+      <p>{error.message || 'Unknown error occurred'}</p>
       <button type="button" onClick={handleClick}>
         Try again
       </button>
