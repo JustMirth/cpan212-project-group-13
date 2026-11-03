@@ -2,12 +2,15 @@ import Link from "next/link";
 import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
 import NotificationMessage from "@/components/NotificationMessage";
 import { Suspense } from "react";
-import Loading from "./(list)/loading";
+import Loading from "./loading";
 
 export default async function WorkoutPages() {
     let workouts;
-
+    // const delay = (ms) => new Promise(resolve=>setTimeout(resolve,ms))
+    // uncomment to use fake delay
     try {
+        // await delay(2000)
+        // uncomment to use fake delay
         const response = await fetch(
             `${process.env.API_URL}/api/workouts`,
             { cache: "no-store" }
