@@ -8,3 +8,12 @@ Active group members include Mitchell Callaghan (JustMirth), Judd Lawrence (jula
 
 Judd
  I used chatgpt to help debug and find errors within code for the most part, along with reminders on how to write some helper code, whilst helping me gain a solid understanding to methods and functions I have trouble remembering
+
+
+# M3 Unlisted Videos
+
+Mitchell:
+https://www.youtube.com/watch?v=UU99-F7K-Vo
+
+Mohamed:
+https://www.youtube.com/watch?v=7m326fdObWY
