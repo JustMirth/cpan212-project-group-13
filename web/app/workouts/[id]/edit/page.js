@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import EditWorkoutForm from "@/components/EditWorkoutForm";
 
 export default async function EditWorkoutPage({ params }) {
   const { id } = await params;
@@ -31,7 +32,14 @@ export default async function EditWorkoutPage({ params }) {
     <main>
       <h1>Edit Workout</h1>
       <p>Update the details for your workout below.</p>
-      <br></br>INSERT THE NEW FORM HERE<br></br>
+
+
+      {/* <br></br>INSERT THE NEW FORM HERE<br></br> */}
+      <EditWorkoutForm workout={workout} />
+
+
+
+
       <Link href={`/workouts/${workout.id}`}>Back to Workout Details</Link>
     </main>
   );
