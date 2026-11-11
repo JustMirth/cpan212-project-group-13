@@ -32,7 +32,7 @@ export default function EditWorkoutForm({ workout}) {
                 })
             })
 
-            const date = await response.json()
+            const data = await response.json()
 
             if (!response.ok) {
                 const fieldErrors = {}
@@ -49,7 +49,7 @@ export default function EditWorkoutForm({ workout}) {
 
             }
 
-            router.push(`/workouts`);
+            router.push(`/workouts`); //    /${workout.id}
             router.refresh();
         }
         catch (error) {
@@ -63,6 +63,12 @@ export default function EditWorkoutForm({ workout}) {
         <form onSubmit={handleSubmit} noValidate>
 
             {message && <p role="alert">{message}</p>}
+
+            <div>
+                <label htmlFor="workoutID">workoutID</label>
+                <input id="workoutID" name="name" defaultValue={workout.id}/>
+                {errors.name && <p>{errors.name}</p>}
+            </div>
 
             <div>
                 <label htmlFor="name">Workout name</label>
