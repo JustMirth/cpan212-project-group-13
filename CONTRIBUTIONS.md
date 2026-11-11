@@ -35,3 +35,7 @@
 - Made pages, pulling data from API (#2 and #3)
 - Made next.config rewrite path to not include local host (#4)
 - Made shared state banner notification for deleted workouts (#7)
+
+### Judd Torres
+- Made create and edit forms (#5)
+- Created steps to explain how to run application (#9)
