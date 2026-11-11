@@ -39,3 +39,6 @@
 ### Judd Torres
 - Made create and edit forms (#5)
 - Created steps to explain how to run application (#9)
+
+### Mohamed Salad
+- Made Loading, empty and error states. (#6)

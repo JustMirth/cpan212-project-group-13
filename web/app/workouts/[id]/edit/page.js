@@ -13,13 +13,8 @@ export default async function EditWorkoutPage({ params }) {
       { cache: "no-store" }
     );
   } catch (error) {
-    return (
-      <main>
-        <h1>Edit Workout</h1>
-        <p>Unable to connect to the API. Please try again later.</p>
-        <Link href="/workouts">Back to Workouts</Link>
-      </main>
-    );
+    throw new Error("Unable to connect to the API. Please try again later.");
+    
   }
 
   if (response.status === 404) {
@@ -27,13 +22,8 @@ export default async function EditWorkoutPage({ params }) {
   }
 
   if (!response.ok) {
-    return (
-      <main>
-        <h1>Edit Workout</h1>
-        <p>Unable to load this workout. Please try again later.</p>
-        <Link href="/workouts">Back to Workouts</Link>
-      </main>
-    );
+    throw new Error("Unable to load this workout. Please try again later.");
+    
   }
 
   const workout = await response.json();

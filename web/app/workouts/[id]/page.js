@@ -14,13 +14,7 @@ export default async function WorkoutDetailPage({ params }){
             { cache: "no-store" }
         );
     } catch (error) {
-        return (
-            <main>
-                <h1>Workout Details</h1>
-                <p>Unable to connect to the API. Please try again later</p>
-                <Link href="/workouts">Back to Workouts</Link>
-            </main>
-        );
+        throw new Error("Unable to connect to the API. Please try again later");
     }
 
     if (response.status === 404) {
@@ -28,13 +22,8 @@ export default async function WorkoutDetailPage({ params }){
     }
 
     if (!response.ok) {
-        return (
-            <main>
-                <h1>Workout Details</h1>
-                <p>Unable to load this workout. Please try again later</p>
-                <Link href="/workouts">Back to Workouts</Link>
-            </main>
-        );
+        throw new Error("Unable to load this workout. Please try again later");
+        
     }
 
     const workout = await response.json();
@@ -60,7 +49,7 @@ export default async function WorkoutDetailPage({ params }){
             <h2>Notes</h2>
             <p>{workout.notes || "No notes available"}</p>
             <Link href={`/workouts/${workout.id}/edit`}>Edit Workout</Link>
-            <DeleteWorkoutButton workoutID={workout.id} />
+            <DeleteWorkoutButton workoutID={workout.id} workoutName={workout.name} />
             <br />
             <Link href="/workouts">Back to Workouts</Link>
         </main>

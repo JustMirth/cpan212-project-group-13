@@ -1,11 +1,16 @@
 import Link from "next/link";
 import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
 import NotificationMessage from "@/components/NotificationMessage";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 export default async function WorkoutPages() {
     let workouts;
-
+    // const delay = (ms) => new Promise(resolve=>setTimeout(resolve,ms))
+    // uncomment to use fake delay
     try {
+        // await delay(2000)
+        // uncomment to use fake delay
         const response = await fetch(
             `${process.env.API_URL}/api/workouts`,
             { cache: "no-store" }
@@ -17,12 +22,7 @@ export default async function WorkoutPages() {
 
         workouts = await response.json();
     } catch (error) {
-        return (
-            <main>
-                <h1>Workouts</h1>
-                <p>Unavble to load workouts. Please try again later.</p>
-            </main>
-        );
+        throw new Error("Unable to load workouts. Please try again later.");
     }
 
     return (
@@ -36,6 +36,8 @@ export default async function WorkoutPages() {
                 <p>No workouts found. Create your first workout!</p>
             ) : (
                 <section>
+                    <Suspense fallback={<Loading/>}>
+
                     {workouts.map((workout) => (
                         <article key={workout.id}>
                             <h2>{workout.name}</h2>
@@ -43,9 +45,10 @@ export default async function WorkoutPages() {
                             <p>Date: {workout.date}</p>
                             <p>Status: {workout.status}</p>
                             <Link href={`/workouts/${workout.id}`}>View Workout</Link>
-                            <DeleteWorkoutButton workoutID={workout.id} />
+                            <DeleteWorkoutButton workoutID={workout.id} workoutName={workout.name} />
                         </article>
                     ))}
+                    </Suspense>
                 </section>
             )}
         </main>
