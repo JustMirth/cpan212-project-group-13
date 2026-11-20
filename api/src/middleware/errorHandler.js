@@ -23,7 +23,7 @@ export function errorHandler(err, req, res, next) {
     }
 
     if (err.name === 'CastError' && err.kind === 'ObjectId' && err.path === '_id') {
-        return res.status(400).json({
+        return res.status(404).json({
             error: {
                 message: "Resource not found",
                 details: null,
@@ -35,7 +35,7 @@ export function errorHandler(err, req, res, next) {
         const field = Object.keys(err.keyValue ?? {})[0];
         return res.status(400).json({
             error: {
-                message: `Duplicate value'`,
+                message: `Duplicate value`,
                 details: [
                     {
                         field: field ?? "unknown",
