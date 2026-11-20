@@ -1,12 +1,13 @@
-import { randomUUID } from "node:crypto";
-import { exercises } from "../data/exercises.js";
+import Exercise from "../models/exerciseModel.js";
 
-export function getExercises(req, res) {
+export async function getExercises(req, res) {
+    const exercises = await Exercise.find();
+
     res.status(200).json(exercises);
 }
 
-export function getExerciseByID(req, res) {
-    const exercise = exercises.find((item) => item.id === req.params.id);
+export async function getExerciseByID(req, res) {
+    const exercise = await Exercise.findById(req.params.id);
     
     if (!exercise) {
         return res.status(404).json({
@@ -20,21 +21,23 @@ export function getExerciseByID(req, res) {
     res.status(200).json(exercise)
 }
 
-export function createExercise(req, res) {
-    const exercise = {
-        ...req.body,
-        id: randomUUID(),
-    };
-
-    exercises.push(exercise);
+export async function createExercise(req, res) {
+    const exercise = await Exercise.create(req.body);
 
     res.status(201).json(exercise);
 }
 
-export function updateExercise(req, res) {
-    const index = exercises.findIndex((item) => item.id === req.params.id);
+export async function updateExercise(req, res) {
+    const exercise = await Exercise.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { 
+            returnDocument: 'after',
+            runValidators: true
+        }
+    );
 
-    if (index === -1) {
+    if (!exercise) {
         return res.status(404).json({
             error: { 
                 message: "Exercise not found", 
@@ -43,28 +46,20 @@ export function updateExercise(req, res) {
         });
     }
 
-    exercises[index] = {
-        ...exercises[index],
-        ...req.body,
-        id: exercises[index].id,
-    };
-
     res.status(200).json(exercises[index]);
 }
 
-export function deleteExercise(req, res) {
-    const index = exercises.findIndex((item) => item.id === req.params.id);
+export async function deleteExercise(req, res) {
+    const exercise = await Exercise.findByIdAndDelete(req.params.id);
 
-    if (index === -1) {
+    if (!exercise) {
         return res.status(404).json({
             error: { 
-                message: "Exercise not found",
+                message: "Exercise not found", 
                 details: null
             },
         });
     }
-
-    exercises.splice(index, 1);
 
     res.status(204).send();
 }
