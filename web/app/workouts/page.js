@@ -4,7 +4,7 @@ import NotificationMessage from "@/components/NotificationMessage";
 import { Suspense } from "react";
 import Loading from "./loading";
 
-export default async function WorkoutPages( searchParams ) {
+export default async function WorkoutPages({ searchParams }) {
     const params = await searchParams;
 
     const status = params.status ?? "";
@@ -12,6 +12,8 @@ export default async function WorkoutPages( searchParams ) {
     const page = params.page ?? "1";
     const limit = params.limit ?? "10";
 
+    let currentPage
+    let totalPages
     let workouts;
     // const delay = (ms) => new Promise(resolve=>setTimeout(resolve,ms))
     // uncomment to use fake delay
@@ -34,6 +36,9 @@ export default async function WorkoutPages( searchParams ) {
 
         const data = await response.json();
         workouts = data.items;
+
+        currentPage = data.page;
+        totalPages = data.pages;
     } catch (error) {
         throw new Error("Unable to load workouts. Please try again later.");
     }
@@ -45,7 +50,7 @@ export default async function WorkoutPages( searchParams ) {
 
             <Link href="/workouts/new">Create new Workout</Link>
             <form method="GET" action="/workouts">
-                <label htmlFor="status">Fiter bt Status: </label>
+                <label htmlFor="status">Filter by Status: </label>
                 <select id="status" name="status" defaultValue={status}>
                     <option value="">All statuses</option>
                     <option value="planned">Planned</option>
@@ -64,6 +69,7 @@ export default async function WorkoutPages( searchParams ) {
                 </select>
 
                 <input type="hidden" name="limit" value={limit} />
+                <input type="hidden" name="page" value="1" />
                 <button type="submit">Apply</button>
             </form>
 
@@ -74,16 +80,48 @@ export default async function WorkoutPages( searchParams ) {
                     <Suspense fallback={<Loading/>}>
 
                     {workouts.map((workout) => (
-                        <article key={workout.id}>
+                        <article key={workout._id}>
                             <h2>{workout.name}</h2>
                             <p>{workout.description}</p>
                             <p>Date: {workout.date}</p>
                             <p>Status: {workout.status}</p>
-                            <Link href={`/workouts/${workout.id}`}>View Workout</Link>
-                            <DeleteWorkoutButton workoutID={workout.id} workoutName={workout.name} />
+                            <Link href={`/workouts/${workout._id}`}>View Workout</Link>
+                            <DeleteWorkoutButton workoutID={workout._id} workoutName={workout.name} />
                         </article>
                     ))}
                     </Suspense>
+
+                    <nav aria-label="Workout pagination">
+                        <p>
+                            Page {currentPage} of {totalPages}
+                        </p>
+
+                        {currentPage > 1 && (
+                            <Link
+                                href={`/workouts?${new URLSearchParams({
+                                    ...(status && { status }),
+                                    sort,
+                                    page: String(currentPage -1),
+                                    limit,
+                                })}`}
+                            > Previous 
+                            </Link>
+                            )}
+
+                            {" "}
+
+                            {currentPage < totalPages && (
+                                <Link
+                                    href={`/workouts?${new URLSearchParams({
+                                        ...(status && { status }),
+                                        sort,
+                                        page: String(currentPage + 1),
+                                        limit,
+                                    })}`}
+                                > Next
+                                </Link>
+                            )}
+                    </nav>
                 </section>
             )}
         </main>
