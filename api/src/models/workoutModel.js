@@ -70,7 +70,7 @@ const workoutSchema = new mongoose.Schema(
             type: String,
             required: [true, 'Workout status is required'],
             enum: {
-                values: ['planned', 'completed', 'skipped'],
+                values: ['planned', 'completed', 'cancelled'],
                 message: 'Status must be either planned, completed, or skipped',
             },
         },
