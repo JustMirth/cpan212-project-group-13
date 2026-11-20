@@ -46,6 +46,7 @@ const workoutSchema = new mongoose.Schema(
             type: String,
             required: [true, 'User ID is required'],
             trim: true,
+            immutable: true,
         },
         name: {
             type: String,
