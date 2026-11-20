@@ -4,7 +4,14 @@ import NotificationMessage from "@/components/NotificationMessage";
 import { Suspense } from "react";
 import Loading from "./loading";
 
-export default async function WorkoutPages() {
+export default async function WorkoutPages( searchParams ) {
+    const params = await searchParams;
+
+    const status = params.status ?? "";
+    const sort = params.sort ?? "date";
+    const page = params.page ?? "1";
+    const limit = params.limit ?? "10";
+
     let workouts;
     // const delay = (ms) => new Promise(resolve=>setTimeout(resolve,ms))
     // uncomment to use fake delay
@@ -12,7 +19,12 @@ export default async function WorkoutPages() {
         // await delay(2000)
         // uncomment to use fake delay
         const response = await fetch(
-            `${process.env.API_URL}/api/workouts`,
+            `${process.env.API_URL}/api/workouts?${new URLSearchParams({
+                ...(status && { status }),
+                sort,
+                page,
+                limit,
+            })}`,
             { cache: "no-store" }
         );
 
@@ -20,7 +32,8 @@ export default async function WorkoutPages() {
             throw new Error("Failed to retrieve workouts");
         }
 
-        workouts = await response.json();
+        const data = await response.json();
+        workouts = data.items;
     } catch (error) {
         throw new Error("Unable to load workouts. Please try again later.");
     }
@@ -31,6 +44,28 @@ export default async function WorkoutPages() {
             <h1>My Workouts</h1>
 
             <Link href="/workouts/new">Create new Workout</Link>
+            <form method="GET" action="/workouts">
+                <label htmlFor="status">Fiter bt Status: </label>
+                <select id="status" name="status" defaultValue={status}>
+                    <option value="">All statuses</option>
+                    <option value="planned">Planned</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+
+                <label htmlFor="sort">Sort by: </label>
+                <select id="sort" name="sort" defaultValue={sort}>
+                    <option value="date">Date (Oldest First)</option>
+                    <option value="-date">Date (Newest First)</option>
+                    <option value="name">Name (A-Z)</option>
+                    <option value="-name">Name (Z-A)</option>
+                    <option value="createdAt">Date Created (Oldest First)</option>
+                    <option value="-createdAt">Date Created (Newest First)</option>
+                </select>
+
+                <input type="hidden" name="limit" value={limit} />
+                <button type="submit">Apply</button>
+            </form>
 
             {workouts.length === 0 ? (
                 <p>No workouts found. Create your first workout!</p>
