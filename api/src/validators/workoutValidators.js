@@ -131,13 +131,10 @@ export function validateWorkoutUpdate(body) {
         });
     }
 
-    if (
-        body.userID !== undefined &&
-        (typeof body.userID !== "string" || body.userID.trim() === "")
-    ) {
+    if (body.userID !== undefined) {
         errors.push({
             field: "userID",
-            message: "User ID must not be empty",
+            message: "User ID cannot be changed",
         });
     }
 

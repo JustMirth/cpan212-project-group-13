@@ -1,5 +1,15 @@
-import Workout from "../models/workoutModel";
-import Exercise from "../models/exerciseModel";
+import Workout from "../models/workoutModel.js";
+import Exercise from "../models/exerciseModel.js";
+import {validateWorkoutExercise, validateWorkoutExerciseUpdate} from "../validators/workoutExerciseValidators.js";
+
+function sendValidationErrors(res, errors) {
+    return res.status(400).json({
+        error: {
+            message: "Validation failed",
+            details: errors,
+        },
+    });
+}
 
 async function findWorkout(workoutID) {
     return await Workout.findById(workoutID);
@@ -51,6 +61,12 @@ export async function getWorkoutExerciseByID(req, res) {
 }
 
 export async function addWorkoutExercise(req, res) {
+    const errors = validateWorkoutExercise(req.body);
+
+    if (errors.length > 0) {
+        return sendValidationErrors(res, errors);
+    }
+
     const workout = await findWorkout(req.params.workoutID);
 
     if (!workout) {
@@ -63,7 +79,7 @@ export async function addWorkoutExercise(req, res) {
     }
 
     const {wgerID, sets }= req.body;
-    const masterExercise = await Exercise.findOne({ wgerId: wgerID });
+    const masterExercise = await Exercise.findOne({ wgerID });
 
     if (!masterExercise) {
         return res.status(404).json({
@@ -96,6 +112,12 @@ export async function addWorkoutExercise(req, res) {
 }
 
 export async function updateWorkoutExercise(req, res) {
+    const errors = validateWorkoutExerciseUpdate(req.body);
+
+    if (errors.length > 0) {
+        return sendValidationErrors(res, errors);
+    }
+    
     const workout = await findWorkout(req.params.workoutID);
 
     if (!workout) {

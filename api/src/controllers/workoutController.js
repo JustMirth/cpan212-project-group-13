@@ -1,4 +1,14 @@
 import Workout from "../models/workoutModel.js";
+import {validateWorkout, validateWorkoutUpdate} from "../validators/workoutValidators.js";
+
+function sendValidationErrors(res, errors) {
+    return res.status(400).json({
+        error: {
+            message: "Validation failed",
+            details: errors,
+        },
+    });
+}
 
 export async function getWorkouts(req, res) {
     const workouts = await Workout.find();
@@ -22,12 +32,24 @@ export async function getWorkoutByID(req, res) {
 }
 
 export async function createWorkout(req, res) {
+    const errors = validateWorkout(req.body);
+
+    if (errors.length > 0) {
+        return sendValidationErrors(res, errors);
+    }
+
     const workout = await Workout.create(req.body);
 
     res.status(201).json(workout);
 }
 
 export async function updateWorkout(req, res) {
+    const errors = validateWorkoutUpdate(req.body);
+
+    if (errors.length > 0) {
+        return sendValidationErrors(res, errors);
+    }
+    
     const workout = await Workout.findByIdAndUpdate(
         req.params.id,
         req.body,

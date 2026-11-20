@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const exerciseSchema = new mongoose.Schema(
     {
-        wgerId: {
+        wgerID: {
             type: Number,
             required: [true, 'Wger ID is required'],
             unique: true,
