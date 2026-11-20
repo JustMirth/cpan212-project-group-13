@@ -22,7 +22,7 @@ export function errorHandler(err, req, res, next) {
         });
     }
 
-    if (err.name === 'CastError' && err.kind === 'ObjectId') {
+    if (err.name === 'CastError' && err.kind === 'ObjectId' && err.path === '_id') {
         return res.status(400).json({
             error: {
                 message: "Resource not found",
