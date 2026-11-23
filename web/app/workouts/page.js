@@ -1,6 +1,7 @@
 import Link from "next/link";
 import DeleteWorkoutButton from "@/components/DeleteWorkoutButton";
 import NotificationMessage from "@/components/NotificationMessage";
+import WorkoutFilters from "@/components/WorkoutFilters";
 import { Suspense } from "react";
 import Loading from "./loading";
 
@@ -49,29 +50,11 @@ export default async function WorkoutPages({ searchParams }) {
             <h1>My Workouts</h1>
 
             <Link href="/workouts/new">Create new Workout</Link>
-            <form method="GET" action="/workouts">
-                <label htmlFor="status">Filter by Status: </label>
-                <select id="status" name="status" defaultValue={status}>
-                    <option value="">All statuses</option>
-                    <option value="planned">Planned</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-
-                <label htmlFor="sort">Sort by: </label>
-                <select id="sort" name="sort" defaultValue={sort}>
-                    <option value="date">Date (Oldest First)</option>
-                    <option value="-date">Date (Newest First)</option>
-                    <option value="name">Name (A-Z)</option>
-                    <option value="-name">Name (Z-A)</option>
-                    <option value="createdAt">Date Created (Oldest First)</option>
-                    <option value="-createdAt">Date Created (Newest First)</option>
-                </select>
-
-                <input type="hidden" name="limit" value={limit} />
-                <input type="hidden" name="page" value="1" />
-                <button type="submit">Apply</button>
-            </form>
+            <WorkoutFilters
+                status={status}
+                sort={sort}
+                limit={limit}
+            />
 
             {workouts.length === 0 ? (
                 <p>No workouts found. Create your first workout!</p>
