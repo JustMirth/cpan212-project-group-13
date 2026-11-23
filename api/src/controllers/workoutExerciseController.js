@@ -1,6 +1,6 @@
 import Workout from "../models/workoutModel.js";
 import Exercise from "../models/exerciseModel.js";
-import {validateWorkoutExercise, validateWorkoutExerciseUpdate} from "../validators/workoutExerciseValidators.js";
+import {validateWorkoutExercise, validateWorkoutExerciseUpdate} from "../validators/workoutExercisesValidators.js";
 
 function sendValidationErrors(res, errors) {
     return res.status(400).json({
