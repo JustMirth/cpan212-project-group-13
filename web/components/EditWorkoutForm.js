@@ -20,7 +20,7 @@ export default function EditWorkoutForm({ workout}) {
         setMessage("")
 
         try {
-            const response = await fetch (`/api/workouts/${workout.id}`, {
+            const response = await fetch (`/api/workouts/${workout._id}`, {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
@@ -65,12 +65,6 @@ export default function EditWorkoutForm({ workout}) {
             {message && <p role="alert">{message}</p>}
 
             <div>
-                <label htmlFor="workoutID">workoutID</label>
-                <input id="workoutID" name="name" defaultValue={workout.id}/>
-                {errors.name && <p>{errors.name}</p>}
-            </div>
-
-            <div>
                 <label htmlFor="name">Workout name</label>
                 <input id="name" name="name" defaultValue={workout.name}/>
                 {errors.name && <p>{errors.name}</p>}
@@ -80,6 +74,17 @@ export default function EditWorkoutForm({ workout}) {
                 <label htmlFor="description">Description</label>
                 <textarea id="description" name="description" defaultValue={workout.description}/>
                 {errors.description && <p>{errors.description}</p>}
+            </div>
+
+            <div>
+                <label htmlFor="date">Workout date</label>
+                <input
+                    type="date"
+                    id="date"
+                    name="date"
+                    defaultValue={workout.date ? new Date(workout.date).toISOString().slice(0, 10) : ""}
+                />
+                {errors.date && <p>{errors.date}</p>}
             </div>
 
             <div>
