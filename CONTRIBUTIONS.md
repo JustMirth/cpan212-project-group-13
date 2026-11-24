@@ -52,3 +52,6 @@
 - Made related models (#3)
 - Made validation errors (#4)
 - Created filter and pagination options, and implented them on site for users (#5 and #6)
+
+### Mohamed Salad
+- Connects before listening, shows fail message without `MONGODB_URI`, sets sanitizeFilter and updated .env.example (#1)
