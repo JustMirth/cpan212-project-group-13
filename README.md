@@ -36,3 +36,23 @@ https://www.youtube.com/watch?v=7m326fdObWY
 
 Judd:
 https://www.youtube.com/watch?v=rJ54Vc5OWPI
+
+## M4 Set up
+# how to set MONGODB_URI
+    To set up MONGODB_URI, first acquire unique mongoDB atlas connection string. Afterwards, create an env. file under /api folder. Lastly, input the following:
+
+    PORT=4000
+    MONGODB_URI=<your MongoDB link>
+
+# how to run the seed
+    Once you have set up MONGODB_URI in your own .env file, run npm install in your terminal once again under the api folder to install newly added dependencies, in this case, a new script command called seed. After that, you can run npm run seed to proceed.
+
+# query parameters the list endpoint accepts (as of M4)
+    `GET /api/workouts` answers these query parameters:
+
+    | Parameter | Default | Rules |
+    |---|---|---|
+    | `status` | filter workouts by status | `planned`, `completed`, `cancelled` |
+    | `sort` | choose the sort field and direction | `date`, `-date`, `name`, `-name`, `createdAt`, `-createdAt` |
+    | `page` | choose which page to display | positive integer; defaults to `1` |
+    | `limit` | choose how many workouts per page | Positive integer up to `50`; defaults to `10` |
