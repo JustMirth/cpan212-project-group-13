@@ -55,3 +55,7 @@
 
 ### Mohamed Salad
 - Connects before listening, shows fail message without `MONGODB_URI`, sets sanitizeFilter and updated .env.example (#1)
+
+### Judd Torres
+- Created scripts folder for seed.js, modified package.json to enable npm run seed command (#7)
+- Completed instructions to set MONGODB_URI, how to run seed, and list which quiery parameters that endpoint accepts (#8)
