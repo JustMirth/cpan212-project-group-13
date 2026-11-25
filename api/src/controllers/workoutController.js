@@ -1,13 +1,107 @@
-import { randomUUID } from "node:crypto";
-import { workouts } from "../data/workouts.js";
-import { validateWorkout, validateWorkoutUpdate } from "../validators/workoutValidators.js";
+import Workout from "../models/workoutModel.js";
+import {validateWorkout, validateWorkoutUpdate} from "../validators/workoutValidators.js";
 
-export function getWorkouts (req, res) {
-    res.status(200).json(workouts);
+function sendValidationErrors(res, errors) {
+    return res.status(400).json({
+        error: {
+            message: "Validation failed",
+            details: errors,
+        },
+    });
 }
 
-export function getWorkoutByID (req, res) {
-    const workout = workouts.find((item) => item.id === req.params.id);
+export async function getWorkouts(req, res) {
+    const errors =[];
+    const allowedStatuses = ["planned", "completed", "cancelled"];
+    const allowedSorts = [
+        "date",
+        "-date",
+        "name",
+        "-name",
+        "createdAt",
+        "-createdAt",
+    ];
+    const status = req.query.status;
+    const sort = req.query.sort ?? "date";
+    const page = req.query.page ?? "1";
+    const limit = req.query.limit ?? "10";
+
+    if (
+        status !== undefined &&
+        (typeof status !== "string" || !allowedStatuses.includes(status))
+    ) {
+        errors.push({
+            field: "status",
+            message: "Status must be planned, completed or cancelled",
+        });
+    }
+
+    if (typeof sort !== "string" || !allowedSorts.includes(sort)) {
+        errors.push({
+            field: "sort",
+            message: "Invalid sort option",
+        });
+    }
+
+    if (typeof page !== "string" || !/^[1-9]\d*$/.test(page)) {
+        errors.push({
+            field: "page",
+            message: "Page must be a positive integer",
+        });
+    }
+
+    if (typeof limit !== "string" || !/^[1-9]\d*$/.test(limit)) {
+        errors.push({
+            field: "limit",
+            message: "Limit must be a positive integer"
+        });
+    } else if (Number(limit) > 50 ) {
+        errors.push({
+            field: "limit",
+            message: "Limit cannot exceed 50",
+        });
+    }
+
+    if (errors.length > 0) {
+        return sendValidationErrors(res, errors);
+    }
+
+    const currentPage = Number(page);
+    const pageLimit = Number(limit);
+    const skip = (currentPage - 1) * pageLimit;
+
+    const filter = {}
+
+    if (status) {
+        filter.status = status;
+    }
+
+    const sortField = sort.startsWith("-") ? sort.substring(1) : sort;
+    const sortDirection = sort.startsWith("-") ? -1 : 1;
+
+    const sortOptions = {
+        [sortField]: sortDirection,
+    };
+
+    const [workouts, total] = await Promise.all([
+        Workout.find(filter)
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(pageLimit),
+        Workout.countDocuments(filter),
+    ])
+
+    res.status(200).json({
+        items: workouts,
+        total,
+        page: currentPage,
+        limit: pageLimit,
+        pages: Math.ceil(total / pageLimit),
+    })
+}
+
+export async function getWorkoutByID(req, res) {
+    const workout = await Workout.findById(req.params.id).populate('exercises.exercise');
 
     if (!workout) {
         return res.status(404).json({
@@ -21,80 +115,57 @@ export function getWorkoutByID (req, res) {
     res.status(200).json(workout);
 }
 
-export function createWorkout(req, res) {
+export async function createWorkout(req, res) {
     const errors = validateWorkout(req.body);
 
     if (errors.length > 0) {
-        return res.status(400).json({
-            error: {
-                message: "Invalid workout",
-                details: errors,
-            },
-        });
+        return sendValidationErrors(res, errors);
     }
-    
-    const now = new Date();
 
-    const workout = {
-        ...req.body,
-        id: randomUUID(),
-        createdAt: now,
-        updatedAt: now,
-    };
-
-    workouts.push(workout);
+    const workout = await Workout.create(req.body);
 
     res.status(201).json(workout);
 }
 
-export function updateWorkout(req, res) {
-    const index = workouts.findIndex((item) => item.id === req.params.id);
-
-    if (index === -1) {
-        return res.status(404).json({
-            error: { 
-                message: "Workout not found",
-                details: null
-            },
-        });
-    }
-
+export async function updateWorkout(req, res) {
     const errors = validateWorkoutUpdate(req.body);
 
     if (errors.length > 0) {
-        return res.status(400).json({
-            error: {
-                message: "Invalid workout",
-                details: errors,
-            },
-        });
+        return sendValidationErrors(res, errors);
     }
+    
+    const workout = await Workout.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { 
+            returnDocument: 'after',
+            runValidators: true
+        }
+    );
 
-    workouts[index] = {
-        ...workouts[index],
-        ...req.body,
-        id: workouts[index].id,
-        userID: workouts[index].userID,
-        createdAt: workouts[index].createdAt,
-        updatedAt: new Date(),
-    }
-
-    res.status(200).json(workouts[index]);
-}
-
-export function deleteWorkout(req, res) {
-    const index = workouts.findIndex((item) => item.id === req.params.id);
-
-    if (index === -1) {
+    if (!workout) {
         return res.status(404).json({
             error: { 
-                message: "Workout not found",
+                message: "Workout not found", 
                 details: null
             },
         });
     }
 
-    workouts.splice(index, 1);
+    res.status(200).json(workout);
+}
+
+export async function deleteWorkout(req, res) {
+    const workout = await Workout.findByIdAndDelete(req.params.id);
+
+    if (!workout) {
+        return res.status(404).json({
+            error: { 
+                message: "Workout not found", 
+                details: null
+            },
+        });
+    }
 
     res.status(204).send();
 }

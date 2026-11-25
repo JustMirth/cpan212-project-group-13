@@ -41,15 +41,27 @@ export default async function WorkoutDetailPage({ params }){
             ) : (
                 <ul>
                     {workout.exercises.map((exercise) => (
-                        <li key={exercise.id}>{exercise.exerciseName}</li>
+                        <li key={exercise._id}>
+                        <h3>{exercise.exercise?.name}</h3>
+                        <p>{exercise.exercise?.description}</p>
+
+                        <h4>Sets</h4>
+                        <ul>
+                            {exercise.sets.map((set, index) => (
+                                <li key={index}>
+                                    Set {index + 1}: {set.reps} reps at {set.weight} weight
+                                </li>
+                                ))}
+                            </ul>
+                        </li>
                     ))}
                 </ul>
             )}
 
             <h2>Notes</h2>
             <p>{workout.notes || "No notes available"}</p>
-            <Link href={`/workouts/${workout.id}/edit`}>Edit Workout</Link>
-            <DeleteWorkoutButton workoutID={workout.id} workoutName={workout.name} />
+            <Link href={`/workouts/${workout._id}/edit`}>Edit Workout</Link>
+            <DeleteWorkoutButton workoutID={workout._id} workoutName={workout.name} />
             <br />
             <Link href="/workouts">Back to Workouts</Link>
         </main>

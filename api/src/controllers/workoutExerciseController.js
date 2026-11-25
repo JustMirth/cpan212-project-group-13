@@ -1,24 +1,26 @@
-import { randomUUID } from "node:crypto";
-import { workouts } from "../data/workouts.js";
-import { exercises } from "../data/exercises.js";
-import { validateWorkoutExercise, validateWorkoutExerciseUpdate } from "../validators/workoutExercisesValidators.js";
+import Workout from "../models/workoutModel.js";
+import Exercise from "../models/exerciseModel.js";
+import {validateWorkoutExercise, validateWorkoutExerciseUpdate} from "../validators/workoutExercisesValidators.js";
 
-function findWorkout(workoutID) {
-    return workouts.find((workout) => workout.id === workoutID);
+function sendValidationErrors(res, errors) {
+    return res.status(400).json({
+        error: {
+            message: "Validation failed",
+            details: errors,
+        },
+    });
 }
 
-function findExercise(workoutID, workoutExerciseID) {
-    const workout = findWorkout(workoutID);
-
-    if (!workout || !Array.isArray(workout.exercises)) {
-        return undefined;
-    }
-    
-    return workout.exercises.find((exercise) => exercise.id === workoutExerciseID);
+async function findWorkout(workoutID) {
+    return await Workout.findById(workoutID);
 }
 
-export function getWorkoutExercises(req, res) {
-    const workout = findWorkout(req.params.workoutID);
+function findExercise(workout, workoutExerciseID) {
+    return workout.exercises.id(workoutExerciseID);
+}
+
+export async function getWorkoutExercises(req, res) {
+    const workout = await Workout.findById(req.params.workoutID).populate('exercises.exercise');
 
     if (!workout) {
         return res.status(404).json({
@@ -32,8 +34,8 @@ export function getWorkoutExercises(req, res) {
     res.status(200).json(workout.exercises ?? []);
 }
 
-export function getWorkoutExerciseByID(req, res) {
-    const workout = findWorkout(req.params.workoutID);
+export async function getWorkoutExerciseByID(req, res) {
+    const workout = await Workout.findById(req.params.workoutID).populate('exercises.exercise');
 
     if (!workout) {
         return res.status(404).json({
@@ -44,9 +46,9 @@ export function getWorkoutExerciseByID(req, res) {
         });
     }
 
-    const exercise = findExercise(req.params.workoutID, req.params.workoutExerciseID)
+    const workoutExercise = findExercise(workout, req.params.workoutExerciseID);
 
-    if (!exercise) {
+    if (!workoutExercise) {
         return res.status(404).json({
             error: { 
                 message: "Exercise not found in workout",
@@ -55,124 +57,68 @@ export function getWorkoutExerciseByID(req, res) {
         });
     }
 
-    res.status(200).json(exercise);
+    res.status(200).json(workoutExercise);
 }
 
-export function addWorkoutExercise(req, res) {
-    const workout = findWorkout(req.params.workoutID);
-
-    if (!workout) {
-        return res.status(404).json({
-            error: { 
-                message: "Workout not found",
-                details: null
-            },
-        });
-    }
-
+export async function addWorkoutExercise(req, res) {
     const errors = validateWorkoutExercise(req.body);
 
     if (errors.length > 0) {
-        return res.status(400).json({
-            error: {
-                message: "Invalid workout exercise",
-                details: errors,
+        return sendValidationErrors(res, errors);
+    }
+
+    const workout = await findWorkout(req.params.workoutID);
+
+    if (!workout) {
+        return res.status(404).json({
+            error: { 
+                message: "Workout not found",
+                details: null
             },
         });
     }
 
-    const { wgerID, sets } = req.body;
-    const masterExercise = exercises.find(
-        (exercise) => exercise.wgerID === wgerID
-    );
+    const {wgerID, sets }= req.body;
+    const masterExercise = await Exercise.findOne({ wgerID });
 
     if (!masterExercise) {
         return res.status(404).json({
-            error: { 
-                message: "Exercise not found in master library",
+            error: {
+                message: "Exercise not found in master list",
                 details: null
             },
         });
     }
 
-    if (!Array.isArray(workout.exercises)) {
-        workout.exercises = [];
-    }
+    const alreadyExists = workout.exercises.some(
+        (item) => item.exercise.toString() === masterExercise._id.toString()
+    );
 
-    const alreadyAdded = workout.exercises.some(
-        (exercise) => exercise.wgerID === wgerID);
-
-    if (alreadyAdded) {
+    if (alreadyExists) {
         return res.status(400).json({
             error: {
-                message: "Exercise is already in workout",
+                message: "Exercise already exists in workout",
                 details: null
             },
         });
     }
 
-    const workoutExercise = {
-        id: randomUUID(),
-        exerciseID: masterExercise.wgerID,
-        exerciseName: masterExercise.name,
-        sets,
-    };
+    workout.exercises.push({ exercise: masterExercise._id, sets });
+    await workout.save();
 
-    workout.exercises.push(workoutExercise);
-    workout.updatedAt = new Date()
+    const addedExercise = workout.exercises[workout.exercises.length - 1];
 
-    res.status(201).json(workoutExercise);
+    res.status(201).json(addedExercise);
 }
 
-export function updateWorkoutExercise(req, res) {
-    const workout = findWorkout(req.params.workoutID);
-
-    if (!workout) {
-        return res.status(404).json({
-            error: { 
-                message: "Workout not found",
-                details: null
-            },
-        });
-    }
-
+export async function updateWorkoutExercise(req, res) {
     const errors = validateWorkoutExerciseUpdate(req.body);
 
     if (errors.length > 0) {
-        return res.status(400).json({
-            error: {
-                message: "Invalid workout exercise",
-                details: errors,
-            },
-        });
+        return sendValidationErrors(res, errors);
     }
-
-    const exercises = workout.exercises ?? [];
-    const index = exercises.findIndex(
-        (item) => item.id === req.params.workoutExerciseID
-    );
-
-    if (index === -1) {
-        return res.status(404).json({
-            error: { 
-                message: "Exercise not found in workout",
-                details: null
-            },
-        });
-    }
-
-    exercises[index] = {
-        ...exercises[index],
-        ...req.body,
-        id: exercises[index].id,
-    };
-
-    workout.updatedAt = new Date();
-    res.status(200).json(exercises[index]);
-}
-
-export function deleteWorkoutExercise(req, res) {
-    const workout = findWorkout(req.params.workoutID);
+    
+    const workout = await findWorkout(req.params.workoutID);
 
     if (!workout) {
         return res.status(404).json({
@@ -183,22 +129,48 @@ export function deleteWorkoutExercise(req, res) {
         });
     }
 
-    const exercises = workout.exercises ?? [];
-    const index = exercises.findIndex(
-        (item) => item.id === req.params.workoutExerciseID
-    );
+    const workoutExercise = findExercise(workout, req.params.workoutExerciseID);
 
-    if (index === -1) {
+    if (!workoutExercise) {
         return res.status(404).json({
-            error: { 
+            error: {
                 message: "Exercise not found in workout",
                 details: null
             },
         });
     }
+    
+    workoutExercise.sets = req.body.sets;
+    await workout.save();
 
-    exercises.splice(index, 1);
-    workout.updatedAt = new Date();
+    res.status(200).json(workoutExercise);
+}
+
+export async function deleteWorkoutExercise(req, res) {
+    const workout = await findWorkout(req.params.workoutID);
+
+    if (!workout) {
+        return res.status(404).json({
+            error: { 
+                message: "Workout not found",
+                details: null
+            },
+        });
+    }
+
+    const workoutExercise = findExercise(workout, req.params.workoutExerciseID);
+
+    if (!workoutExercise) {
+        return res.status(404).json({
+            error: {
+                message: "Exercise not found in workout",
+                details: null
+            },
+        });
+    }
+    
+    workoutExercise.deleteOne();
+    await workout.save();
 
     res.status(204).send();
 }

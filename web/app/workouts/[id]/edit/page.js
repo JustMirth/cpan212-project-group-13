@@ -40,7 +40,7 @@ export default async function EditWorkoutPage({ params }) {
 
 
 
-      <Link href={`/workouts/${workout.id}`}>Back to Workout Details</Link>
+      <Link href={`/workouts/${workout._id}`}>Back to Workout Details</Link>
     </main>
   );
 }

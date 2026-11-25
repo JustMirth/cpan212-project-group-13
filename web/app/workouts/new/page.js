@@ -52,7 +52,7 @@ export default function NewWorkoutPage() {
                 return;
             }
 
-            router.push(`/workouts/${data.id}`)
+            router.push(`/workouts/${data._id}`)
             router.refresh()
         }
         catch (error){
